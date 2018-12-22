@@ -7,37 +7,47 @@
 
         <h1>You have just logged in!</h1>
         <h2>Now you can add todos for all other users to see!! How delightful! :)</h2>
-        
-        <p>User details:</p>
+
+        <h3>User details:</h3>
         <span>Admin user: = </span><span id="admin"></span>
+        <br></br>
         <span>Logged in: </span><span id="loggedin"></span>
-        
-                <h1>Add new todo!</h1>
+
+        <h1>Add new todo!</h1>
 
         <form action="#" th:action="@{/todo}" method="POST">
             <p><label for="content">Content</label>: <input type="text" name="content" id="content"/></p>
             <p><input type="submit" value="Submit" /></p>
         </form>
 
-        
+
+        <h1>Global Todos shared with every user:</h1>
+
+        <ul>
+            <li th:each="todo : ${todos}">
+                <span th:text="${todo}">Hello</span>
+            </li>
+        </ul>
+
+
         <script th:inline="javascript">
-            var admin =/*[[${admin}]]*/ 'defaultanyvalue';
-            
-            if(admin){ // Some items should be shown only to admins...
-                window.sessionStorage.setItem("admin",true);
+            var admin = /*[[${admin}]]*/ 'defaultanyvalue';
+
+            if (admin) { // Some items should be shown only to admins...
+                window.sessionStorage.setItem("admin", true);
             } else {
-                window.sessionStorage.setItem("admin",false);
+                window.sessionStorage.setItem("admin", false);
             }
-            
+
             window.sessionStorage.setItem("loggedin", true); //Some items may be shown only to logged in users...
-            
+
             document.getElementById("loggedin").textContent = window.sessionStorage.getItem("loggedin");
             document.getElementById("admin").textContent = window.sessionStorage.getItem("admin");
-            
-            
+
+
             console.log("Login script ran, sessionstorage admin byte is set to " + window.sessionStorage.getItem("admin"));
-            
-            
+
+
         </script>
 
     </body>
