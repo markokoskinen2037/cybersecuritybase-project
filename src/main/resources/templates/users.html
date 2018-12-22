@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>User-info</title>
+    </head>
+    <body>
+        
+        <h1>Users:</h1>
+
+        <ul>
+            <li th:each="user : ${users}">
+                <span th:text="${user}">Hello</span>
+            </li>
+        </ul>
+
+    </body>
+</html>

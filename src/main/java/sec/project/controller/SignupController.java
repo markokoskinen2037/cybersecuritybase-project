@@ -16,7 +16,7 @@ public class SignupController {
 
     @RequestMapping("*")
     public String defaultMapping() {
-        return "redirect:/form";
+        return "redirect:/register";
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.GET)
