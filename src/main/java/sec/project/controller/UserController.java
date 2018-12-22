@@ -40,7 +40,7 @@ public class UserController {
         
         System.out.println("SAVING NEW USER AND REDIRECTING");
         
-        return "redirect:/users";
+        return "redirect:/login";
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.GET)
