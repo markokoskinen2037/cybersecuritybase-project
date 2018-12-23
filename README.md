@@ -44,30 +44,33 @@ Users already in database:
 #### How to identify:
 1. Go to http://localhost:8080/login
 1. Login with any account. For example: ```ted:ted```
-1. Add a new todo with Todo-content ´´´<script>window.location.replace("http://www.example.com")</script>```
+1. Add a new todo with Todo-content ```<script>window.location.replace("http://www.example.com")</script>```
 1. View global list of todos by clicking "Click here"
 1. Notive how you are now being redirected to http://www.example.com
 #### How to fix:
 1. The todo-listing page is currently being created to a String.
 1. Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing engine such as Thymeleaf.
 ---------------
-### Ax NameOfProblem
+### A3 Sensitive Data Exposure
 #### How to identify:
-1. 
-1. 
-1. 
+1. Notice how there is no direct link to http://locahost:8080/users
+1. However, if a user were to find this URL by accident or with an attacking tool - he would be able to see usernames and passwords of every user.
 #### How to fix:
-1.
-1.
-1.
+1. Remove /users route from the web-application.
 ---------------
-### Ax NameOfProblem
+### A5 Broken Access Control
 #### How to identify:
-1. 
-1. 
-1. 
+1. Go to http://localhost:8080/login
+1. Login with ```ted:ted```
+1. Notice how there is no link to adminpage.
+1. Open your web-browsers developer console.
+1. Input ´´´ window.sessionStorage.setItem("username", "admin");´´´
+1. Refresh the page (F5)
+1. Notice how there is now a link to "Supersecret adminpage", from where one can clear the whole database.
 #### How to fix:
-1.
-1.
-1.
+1. Implement better session handling. This could be achieved with tokens like so:
+- User logs in for the first time.
+- Server creates a unique token that is saved on server and also sent back to users web-browser - where the token is stored.
+- Check the token everytime, when a user tries to access a restricted URL such as /adminpage.
+- If the token is valid, return adminpage.html. Else redirect users browser back where it came from.
 ---------------
