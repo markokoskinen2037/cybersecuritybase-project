@@ -1,0 +1,82 @@
+Greetings reviewer!
+
+For my project, I have decided to create a simple todo-application with 5 severe vulnerabilities from the OSWAP top 10 list. 
+The issues include: Injection, Broken Authentication, Cross-site Scripting, Sensitive Data Exposure, and Broken Access Control.
+
+The project is in GitHub and it can be downloaded from: https://github.com/markokoskinen2037/cybersecuritybase-project
+
+All application data (usernames,passwords,todos) is stored in a local SQL database.
+When you start the application, a new database is created and some sample data is inserted. The following username:password combinations are at your disposal (you can also create new ones):
+admin:password
+ted:ted
+homer:simpson
+
+Please complete the examination process in order from top to botton. Otherwise some of my flaw-reproduction istructions might not work due to changes in the SQL database.
+
+Vulnerabilies and how to fix them:
+
+A3 Sensitive Data Exposure
+Steps to reproduce:
+1. Go to http://localhost:8080/users
+2. Notice how there is no direct link to http://localhost:8080/users in the application. However, if a user were to find this URL by accident or with an attacking tool - he would be able to see usernames and passwords of every user... not so good.
+How to fix:
+1. Remove /users route from the web-application. Because it's insane to provide a route that allows anyone who finds it to obtain a list of all other users and their passwords... Maybe it does not matter so much that someone can use their accounts to create some todos, but the users probably use the same username:password combinations on other more important sites...
+
+-----------------------------------------
+A2 Broken Authentication
+Steps to reproduce
+1. Open http://localhost:8080/register
+2. Create a new account with any username-password combination.
+3. Go to http://localhost:8080/users
+4. Notice that your username and password are indeed in plain text.
+Second flaw:
+2. Open http://localhost:8080/login
+2. Login with admin:password
+2. Notice that administrative accounts login details are left to default values and are therefore easy to crack by bruteforce.
+How to fix:
+1. Enable password crypting scheme, for example BCrypt. Once the passwords are encrypted
+2. Change default administrative password to a more secure one. I would also advice, that the administrative password should be around 20 characters long sequence of seeminly random letters - and the password should be changed atleast once per month.
+---------------------------
+
+A7 Cross-site Scripting
+Steps to reproduce:
+1. Go to http://localhost:8080/login
+2. Login with any account. For example: ```ted:ted```
+3. Add a new todo with Todo-content ```<script>window.location.replace("http://www.example.com")</script>```
+4. View global list of todos by clicking "Click here"
+5. Notive how you are now being redirected to http://www.example.com
+How to fix:
+1. The todo-listing page is currently being created to a String.
+2. Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing engine such as Thymeleaf.
+
+-----------------
+A5 Broken Access Control
+Steps to reproduce:
+1. Go to http://localhost:8080/login
+2. Login with ted:ted`
+3. Notice how there is no link to adminpage.
+4. Open your browser's developer console.
+5. Input window.sessionStorage.setItem("username", "admin");
+6. Refresh the page (F5)
+7. Notice how there is now a link to "Supersecret adminpage", from where you can now access functions that should be unavailable to everyone except user: "admin".
+How to fix:
+1. Implement better session handling. This could be achieved with tokens like so:
+- User logs in for the first time.
+- Server creates a unique token that is saved on server and also sent back to users web-browser - where the token is stored.
+- Check the token everytime, when a user tries to access a restricted URL such as /adminpage.
+- If the token is valid, return adminpage.html. Else redirect users browser back where it came from.
+---------------
+
+Issue: A1 Injection
+Steps to reproduce
+1. Open localhost:8080/users
+2. Notice, that the are several users in the database.
+3. Open http://localhost:8080/register
+4. Leave name-field empty.
+5. Set password-field to: '); DROP TABLE USER; CREATE TABLE User (id int NOT NULL AUTO_INCREMENT,username varchar(200),password varchar(200)); INSERT INTO User (username,password) VALUES ('You have been hacked',' sorry
+6. Click "Submit".
+7. Open http://localhost:8080/users
+8. Notice, that all other users have been deleted.
+How to fix:
+1. Sanitize SQL query input parameters in the application.
+---------------
