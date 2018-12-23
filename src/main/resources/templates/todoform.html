@@ -3,35 +3,59 @@
     <head>
         <title>Todo-list</title>
     </head>
-    <body>
-
-        <h1>You have just logged in!</h1>
-        <h2>Now you can add todos for all other users to see!! How delightful! :)</h2>
-
-        <h3>User details:</h3>
-        <span>Admin user: = </span><span id="admin"></span>
-        <br></br>
-        <span>Logged in: </span><span id="loggedin"></span>
-
-        <h1>Add new todo!</h1>
-
-        <form action="#" th:action="@{/todo}" method="POST">
-            <p><label for="content">Content</label>: <input type="text" name="content" id="content"/></p>
-            <p><input type="submit" value="Submit" /></p>
-        </form>
+    <body id="core" style="visibility:hidden">
+        
+        <a style="float:right" href="/logout">Logout</a>
 
 
-        <h1>Global Todos shared with every user:</h1>
+        <div style="display:none">
+            <h3>Login details:</h3>
+            <span>Admin: </span><span id="admin"></span>
+            <br></br>
+            <span>Logged in: </span><span id="loggedin"></span>
+        </div>
 
-        <ul>
-            <li th:each="todo : ${todos}">
-                <span th:text="${todo}">Hello</span>
-            </li>
-        </ul>
+        <p id="adminControls" style="display: none"><a href="/adminpage">Supersecret admin page</a></p>
+
+        <div> 
+            <h1>Add new todo</h1>
+
+            <form action="#" th:action="@{/todo}" method="POST">
+                <p><label for="content">Todo-content</label>: <input type="text" name="content" id="content"/></p>
+                <p><input type="submit" value="Add new todo" /></p>
+            </form>
+        </div>
+
+        <div>
+            <h1>View global list of todos</h1>
+            <a href="/todolist">Click here</a>
+        </div>
 
 
         <script th:inline="javascript">
             var admin = /*[[${admin}]]*/ 'defaultanyvalue';
+            var legitLogin = /*[[${legitLogin}]]*/ 'defaultanyvalue';
+            var username = /*[[${username}]]*/ 'defaultanyvalue';
+            
+
+            
+
+
+            if (!window.sessionStorage.getItem("legitLogin")) {
+
+                if (!legitLogin) {
+                    console.log("You are not supposed to be here!!");
+                    window.location.replace("/login");
+                }
+                if (legitLogin) {
+                    window.sessionStorage.setItem("username",username); //Asetetaan talteen käyttäjänimi
+                    window.sessionStorage.setItem("legitLogin", true); //Asetetaan tieto siitä, että kirjautuminen todella on legit.
+                    document.getElementById("core").style.visibility = "visible"; //Annetaan pääsy todojen luontiin
+                }
+            } else {
+                document.getElementById("core").style.visibility = "visible"; //Jos on legitlogin tiedossa, näytetään todolisäys.
+            }
+
 
             if (admin) { // Some items should be shown only to admins...
                 window.sessionStorage.setItem("admin", true);
@@ -39,11 +63,15 @@
                 window.sessionStorage.setItem("admin", false);
             }
 
-            window.sessionStorage.setItem("loggedin", true); //Some items may be shown only to logged in users...
-
+            window.sessionStorage.setItem("loggedin", true);
             document.getElementById("loggedin").textContent = window.sessionStorage.getItem("loggedin");
             document.getElementById("admin").textContent = window.sessionStorage.getItem("admin");
 
+
+            if(window.sessionStorage.getItem("username") === "admin"){
+                console.log("Welcome back administrative person!");
+                document.getElementById("adminControls").style.display = "block";
+            }
 
             console.log("Login script ran, sessionstorage admin byte is set to " + window.sessionStorage.getItem("admin"));
 

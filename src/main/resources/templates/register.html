@@ -4,14 +4,21 @@
         <title>Register</title>
     </head>
     <body>
-
+        <a href="/login">login</a>
         <h1>Register</h1>
+        <p>You need to register in order to use this app!</p>
 
         <form action="#" th:action="@{/register}" method="POST">
             <p><label for="username">Username</label>: <input type="text" name="username" id="username"/></p>
-            <p><label for="password">Password</label>: <input type="password" name="password" id="password"/></p>
+            <p><label for="password">Password</label>: <input type="text" name="password" id="password"/></p>
             <p><input type="submit" value="Submit" /></p>
         </form>
+        
+        <script>
+            if(window.sessionStorage.getItem("loggedIn")){
+                window.location.replace("/todo");
+            }
+        </script>
 
         <p></p>
     </body>

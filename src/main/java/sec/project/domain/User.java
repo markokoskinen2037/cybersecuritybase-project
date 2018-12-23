@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Table(name = "Logins")
 public class User extends AbstractPersistable<Long> {
 
+    
     @Column(name = "username")
     private String username;
     @Column(name = "password")

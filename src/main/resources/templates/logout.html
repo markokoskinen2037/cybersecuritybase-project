@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Login</title>
+        <title>Logout</title>
     </head>
     <body>
 
-        <h1>Login</h1>
-
-        <form action="#" th:action="@{/login}" method="POST">
-            <p><label for="username">Username</label>: <input type="text" name="username" id="username"/></p>
-            <p><label for="password">Password</label>: <input type="password" name="password" id="password"/></p>
-            <p><input type="submit" value="Submit" /></p>
-        </form>
+        <a href="/login">log back in</a>
+        <h1>You have been logged out.</h1>
+        
+        <script>
+            window.sessionStorage.removeItem("admin");
+            window.sessionStorage.removeItem("username");
+            window.sessionStorage.removeItem("legitLogin");
+            console.log("session data cleared, dont worry :)");
+        </script>
 
         <p></p>
     </body>

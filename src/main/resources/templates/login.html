@@ -4,7 +4,7 @@
         <title>Login</title>
     </head>
     <body>
-
+        <a href="/register">register</a>
         <h1>Login</h1>
 
         <form action="#" th:action="@{/login}" method="POST">
@@ -13,6 +13,10 @@
             <p><input type="submit" value="Submit" /></p>
         </form>
 
-        <p></p>
+        <script>
+            if (window.sessionStorage.getItem("loggedIn")) {
+                window.location.replace("/todo");
+            }
+        </script>
     </body>
 </html>

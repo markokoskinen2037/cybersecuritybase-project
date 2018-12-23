@@ -4,8 +4,15 @@
         <title>Thank you!</title>
     </head>
     <body>
-
-        <h1>Thank you! You have been signed up to the event!</h1>
+        <a href="/login">back</a>
+        <h1>All data from local SQL database removed.</h1>
+        
+        
+        <script>
+            window.sessionStorage.removeItem("admin");
+            window.sessionStorage.removeItem("username");
+            window.sessionStorage.removeItem("legitLogin");
+        </script>
 
     </body>
 </html>

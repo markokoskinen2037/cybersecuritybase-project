@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Thank you!</title>
+        <title>Adminpage</title>
     </head>
-    <body>
+    <body style="display:none" id="core">
 
-        <h1>Thank you! You have been signed up to the event!</h1>
+        <h1>Welcome back, Admin!</h1>
+
+        <div> 
+            <h2>Commands at your disposal:</h2>
+
+            <form  action="#" th:action="@{/cleardatabase}" method="POST">
+                <p><input style="width:370px;height:70px;background-color: red;font-size: 30px" type="submit" value="CLEAR SQL DATABASE" /></p>
+            </form>
+        </div>
+        
+        <script>
+            if(window.sessionStorage.getItem("username") === null){
+                window.location.replace("/login");
+            } else if (window.sessionStorage.getItem("username") !== "admin"){
+                window.location.replace("/todo");
+            } else {
+                document.getElementById("core").style.display = "block";
+            }
+        </script>
 
     </body>
 </html>

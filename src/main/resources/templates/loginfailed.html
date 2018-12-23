@@ -4,8 +4,10 @@
         <title>Login</title>
     </head>
     <body>
-
+        <a href="/register">register</a>
         <h1>Login</h1>
+        
+        <p style="color: red">Wrong username or password, try again!</p>
 
         <form action="#" th:action="@{/login}" method="POST">
             <p><label for="username">Username</label>: <input type="text" name="username" id="username"/></p>
@@ -13,6 +15,10 @@
             <p><input type="submit" value="Submit" /></p>
         </form>
 
-        <p></p>
+        <script>
+            if (window.sessionStorage.getItem("loggedIn")) {
+                window.location.replace("/todo");
+            }
+        </script>
     </body>
 </html>
