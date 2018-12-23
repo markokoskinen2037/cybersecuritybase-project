@@ -64,7 +64,7 @@ Users already in database:
 1. Login with ```ted:ted```
 1. Notice how there is no link to adminpage.
 1. Open your web-browsers developer console.
-1. Input ´´´ window.sessionStorage.setItem("username", "admin");´´´
+1. Input ``` window.sessionStorage.setItem("username", "admin"); ```
 1. Refresh the page (F5)
 1. Notice how there is now a link to "Supersecret adminpage", from where one can clear the whole database.
 #### How to fix:
