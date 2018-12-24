@@ -72,7 +72,7 @@ public class TodoController {
 
         site += " <a style='float:right;text-decoration: none;color: black;background-color: antiquewhite;border: 1px solid;padding: 5px;border-radius: 2px;' href='/leave'>Logout</a>";
 
-        site += "<h1 style='background-color: darkseagreen;width: 50%;color: white;padding: 5px;text-decoration: underline;'>Todolist:</h1>";
+        site += "<h1 style='background-color: green;width: 50%;color: white;padding: 5px;text-decoration: underline;'>Todolist:</h1>";
         for (Todo todo : todos) {
             site += "<p>" + todo.getContent() + "</p>";
         }

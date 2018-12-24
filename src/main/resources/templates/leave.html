@@ -20,11 +20,8 @@
 
         <script>
             console.log("Deleting all userinfo from session storage...");
-            window.sessionStorage.removeItem("admin");
-            window.sessionStorage.removeItem("username");
-            window.sessionStorage.removeItem("loggedIn");
-            window.sessionStorage.removeItem("legitLogin");
-            console.log("Session data cleared, dont worry about it :)");
+            window.sessionStorage.clear();
+            console.log("Session data cleared, dont worry about it! :)")
         </script>
 
         <p></p>
