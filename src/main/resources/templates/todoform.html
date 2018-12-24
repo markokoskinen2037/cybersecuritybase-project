@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Todo-list</title>
+        <title>TodoApp - List</title>
     </head>
-    <body id="core" style="visibility:hidden">
-        
-        <a style="float:right" href="/logout">Logout</a>
+    <body id="core" style="visibility:hidden;margin:25px;">
 
+        <a style="float:right;
+           text-decoration: none;
+           color: black;
+           background-color: antiquewhite;
+           border: 1px solid;
+           padding: 5px;
+           border-radius: 2px;
+           " href="/leave">Logout
+        </a>
 
-        <div style="display:none">
-            <h3>Login details:</h3>
-            <span>Admin: </span><span id="admin"></span>
-            <br></br>
-            <span>Logged in: </span><span id="loggedin"></span>
-        </div>
-
-        <p id="adminControls" style="display: none"><a href="/adminpage">Supersecret admin page</a></p>
+        <p id="adminControls"  style="display:none">
+            <a
+                style="  color: black;
+                background-color: antiquewhite;
+                border: 1px solid;
+                text-decoration: underline;
+                padding: 5px;
+                border-radius: 2px;" href="/adminpage">Supersecret admin page
+            </a>
+        </p>
 
         <div> 
-            <h1>Add new todo</h1>
+            <h2 style="background-color: green;
+                width: 50%;
+                color: white;
+                padding: 5px;
+                text-decoration: underline;">Add new todo</h2>
 
             <form action="#" th:action="@{/todo}" method="POST">
                 <p><label for="content">Todo-content</label>: <input type="text" name="content" id="content"/></p>
@@ -27,8 +40,18 @@
         </div>
 
         <div>
-            <h1>View global list of todos</h1>
-            <a href="/todolist">Click here</a>
+            <h2 style="background-color: green;
+                width: 50%;
+                color: white;
+                padding: 5px;
+                text-decoration: underline;">View global list of todos</h2>
+            <a style="text-decoration: none;
+               color: black;
+               background-color: antiquewhite;
+               border: 1px solid;
+               padding: 5px;
+               border-radius: 2px;
+               " href="/todolist">Click here</a>
         </div>
 
 
@@ -36,23 +59,24 @@
             var admin = /*[[${admin}]]*/ 'defaultanyvalue';
             var legitLogin = /*[[${legitLogin}]]*/ 'defaultanyvalue';
             var username = /*[[${username}]]*/ 'defaultanyvalue';
-            
-
-            
 
 
+
+            //Tarkistetaan tunnus, jos ei ole tietoa...
             if (!window.sessionStorage.getItem("legitLogin")) {
 
-                if (!legitLogin) {
+                if (legitLogin === null) {
                     console.log("You are not supposed to be here!!");
                     window.location.replace("/login");
                 }
-                if (legitLogin) {
-                    window.sessionStorage.setItem("username",username); //Asetetaan talteen käyttäjänimi
+                else {
+                    window.sessionStorage.setItem("username", username); //Asetetaan talteen käyttäjänimi
                     window.sessionStorage.setItem("legitLogin", true); //Asetetaan tieto siitä, että kirjautuminen todella on legit.
                     document.getElementById("core").style.visibility = "visible"; //Annetaan pääsy todojen luontiin
+                    window.sessionStorage.setItem("loggedin", true);
                 }
             } else {
+                //Jos käyttäjä on kirjautunut näytetään sivu...
                 document.getElementById("core").style.visibility = "visible"; //Jos on legitlogin tiedossa, näytetään todolisäys.
             }
 
@@ -63,17 +87,15 @@
                 window.sessionStorage.setItem("admin", false);
             }
 
-            window.sessionStorage.setItem("loggedin", true);
-            document.getElementById("loggedin").textContent = window.sessionStorage.getItem("loggedin");
-            document.getElementById("admin").textContent = window.sessionStorage.getItem("admin");
 
 
-            if(window.sessionStorage.getItem("username") === "admin"){
+
+            if (window.sessionStorage.getItem("username") === "admin") {
                 console.log("Welcome back administrative person!");
                 document.getElementById("adminControls").style.display = "block";
             }
 
-            console.log("Login script ran, sessionstorage admin byte is set to " + window.sessionStorage.getItem("admin"));
+            console.log("Login script ran, sessionstorage admin flag is set to " + window.sessionStorage.getItem("admin"));
 
 
         </script>

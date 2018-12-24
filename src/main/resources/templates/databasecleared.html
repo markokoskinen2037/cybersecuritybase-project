@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Thank you!</title>
+        <title>TodoApp - Database cleared!</title>
     </head>
-    <body>
-        <a href="/login">back</a>
-        <h1>All data from local SQL database removed.</h1>
-        
-        
+    <body style="margin:25px">
+        <a style="
+           text-decoration: none;
+           color: black;
+           background-color: antiquewhite;
+           border: 1px solid;
+           padding: 5px;
+           border-radius: 2px;
+           " href="/login">back</a>
+          <h2 style="background-color: red;
+                width: 50%;
+                color: white;
+                padding: 5px;
+                text-decoration: underline;">All data from SQL database removed!</h2>
+
+
         <script>
             window.sessionStorage.removeItem("admin");
             window.sessionStorage.removeItem("username");

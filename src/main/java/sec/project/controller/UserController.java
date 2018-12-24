@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import sec.project.domain.Todo;
 import sec.project.domain.User;
 import sec.project.repository.UserRepository;
 
@@ -45,6 +46,11 @@ public class UserController {
         System.out.println("Initialization completed.");
     }
 
+    @RequestMapping(value = "/leave", method = RequestMethod.GET)
+    public String leave() {
+        return "leave";
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm() {
         return "register";
@@ -63,8 +69,8 @@ public class UserController {
             String name = resultSet.getString("username");
             String pass = resultSet.getString("password");
             String cc = resultSet.getString("cc");
-            
-            User user = new User(name, pass,cc);
+
+            User user = new User(name, pass, cc);
             user.setId(Long.parseLong(id));
             users.add(user);
         }
@@ -82,7 +88,7 @@ public class UserController {
 
         Connection connection = DriverManager.getConnection("jdbc:h2:file:./database", "sa", "");
 
-        String kysely = "INSERT INTO USER (cc,username,password) VALUES ('"+cc +"','" + username + "','" + password + "');";
+        String kysely = "INSERT INTO USER (cc,username,password) VALUES ('" + cc + "','" + username + "','" + password + "');";
 
         connection.createStatement().execute(kysely);
 
@@ -116,6 +122,23 @@ public class UserController {
                     model.addAttribute("admin", false);
                 }
 
+                //And also get todos from database so that they are rendered in view.
+                ResultSet results = connection.createStatement().executeQuery("SELECT * FROM TODO");
+
+                ArrayList<Todo> todos = new ArrayList<>();
+
+                while (results.next()) {
+                    String db_content = results.getString("content");
+                    Todo todo = new Todo(db_content);
+                    todo.setId(Long.parseLong(results.getString("id")));
+                    todos.add(todo);
+                }
+
+                model.addAttribute("todos", todos);
+
+                connection.close();
+                results.close();
+
                 return "todoform";
             }
         }
@@ -129,7 +152,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "*", method = RequestMethod.GET)
-    public String redirect() {
+    public String perusreitti() {
         return "redirect:/register";
     }
 
@@ -150,10 +173,5 @@ public class UserController {
         System.out.println("All done..");
 
         return "databasecleared";
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout() {
-        return "logout";
     }
 }

@@ -1,9 +1,15 @@
-Greetings reviewer!
+Greetings my reviewer!
 
-For my project, I have decided to create a simple todo-application with 5 severe vulnerabilities from the OSWAP top 10 list. 
+For my project, I have decided to create a simple todo-application with 5 severe vulnerabilities from the OSWAP top 10 list.
+In the project I have used the started template with Java Spring, Thymeleft and H2 database.
 The issues include: Injection, Broken Authentication, Cross-site Scripting, Sensitive Data Exposure, and Broken Access Control.
 
 The project is in GitHub and it can be downloaded from: https://github.com/markokoskinen2037/cybersecuritybase-project
+
+In order to get started:
+1. Download the project from github.
+2. Open the project in your Java IDE.
+3. Start the project.
 
 All application data (usernames,passwords,todos) is stored in a local SQL database.
 When you start the application, a new database is created and some sample data is inserted. The following username:password combinations are at your disposal (you can also create new ones):
@@ -43,31 +49,32 @@ A7 Cross-site Scripting
 Steps to reproduce:
 1. Logout.
 1. Go to http://localhost:8080/login
-2. Login with any account. For example: ```ted:ted```
-3. Add a new todo with Todo-content ```<script>window.location.replace("http://www.example.com")</script>```
+2. Login with any account. For example: ted:ted
+3. Add a new todo with Todo-content: <script>window.location.replace("http://www.example.com")</script>
 4. View global list of todos by clicking "Click here"
 5. Notive how you are now being redirected to http://www.example.com
 How to fix:
-1. The todo-listing page is currently being created to a String.
-2. Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing engine such as Thymeleaf.
+- The todo-listing page is currently being created to a String, by appending todos to the end of it. This String is then returned straight to the browser to render.
+- Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing-engine Thymeleaf, that uses th:text as an attribute. By using th:text attribute, Thymeleaf template-engine automatically checks for "shady" input values and acts accordingly. 
+- Now todos that contain <script> tags wont be interpreted as elements that should be rendered, but instead they are treated as text.
 -----------------------------------------
 
 A5 Broken Access Control
 Steps to reproduce:
 1. Logout
-1. Go to http://localhost:8080/login
-2. Login with ted:ted`
-3. Notice how there is no link to adminpage.
-4. Open your browser's developer console.
-5. Input window.sessionStorage.setItem("username", "admin");
-6. Refresh the page (F5)
-7. Notice how there is now a link to "Supersecret adminpage", from where you can now access functions that should be unavailable to everyone except user: "admin".
+2. Go to http://localhost:8080/login
+3. Login with ted:ted
+4. Notice how there is no link to adminpage.
+5. Open your browser's developer console.
+6. Input window.sessionStorage.setItem("username", "admin");
+7. Refresh the page (F5)
+8. Notice how there is now a link to "Supersecret adminpage", from where you can now access functions that should be unavailable to everyone except user: "admin".
 How to fix:
-1. Implement better session handling and request validation. This could be achieved with tokens like so:
+1. Implement session handling and request validation. This could be achieved with tokens like so:
 - User logs in for the first time.
 - Server creates a unique token (for example JWT-token) that is saved on server and also sent back to users web-browser - where the token is stored.
 - Check the token everytime whenever a user tries to access a restricted URL such as /adminpage.
-- If the token is valid, return adminpage.html. Else redirect users browser back where it came from.
+- If the token is valid, return adminpage.html. Else redirect user back to where he came from.
 - Because the token is created on the server by highly sophisticated Sinature Algorithm, it's basically impossible to guess a valid token.
 -----------------------------------------
 
@@ -82,5 +89,10 @@ Steps to reproduce
 7. Open http://localhost:8080/users
 8. Notice, that all other users have been deleted.
 How to fix:
-1. Sanitize SQL query input parameters in the application.
+Sanitize SQL query input parameters by using Prepared Statements. This can easily be implemented in application code by following these steps:
+1. Create a String query = "INSERT INTO User (username,password,cc) VALUES(?,?);"
+2. Perform some validation on the input params. I would suggest at least checking the length of the input params, and that if they contain <script> elements.
+3. Create a PreparedStatement object from the query.
+4. Insert input params into the PreparedStatement.
+5. Execute the PreparedStatement.
 -----------------------------------------

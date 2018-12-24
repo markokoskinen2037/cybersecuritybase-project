@@ -21,6 +21,7 @@ public class TodoController {
     @Autowired
     private TodoRepository todoRepository;
 
+    //Lisää todo
     @RequestMapping(value = "/todo", method = RequestMethod.POST)
     public String addTodo(@RequestParam String content, Model model) throws SQLException {
 
@@ -48,6 +49,7 @@ public class TodoController {
         return "todoform";
     }
 
+    //Listaa todot
     @RequestMapping(value = "/todolist", method = RequestMethod.GET)
     @ResponseBody
     public String todolist() throws SQLException {
@@ -66,13 +68,11 @@ public class TodoController {
         }
 
         String site = "";
-        site += "<a href='/todo'>Go back</a>";
-        
-        site+=" <a style='float:right' href='/logout'>Logout</a>";
-        
-        
-        
-        site += "<h1>Todolist:</h1>";
+        site += "<a style='text-decoration: none;color: black;background-color: antiquewhite;border: 1px solid;padding: 5px;border-radius: 2px;' href='/todo'>Go back</a>";
+
+        site += " <a style='float:right;text-decoration: none;color: black;background-color: antiquewhite;border: 1px solid;padding: 5px;border-radius: 2px;' href='/leave'>Logout</a>";
+
+        site += "<h1 style='background-color: darkseagreen;width: 50%;color: white;padding: 5px;text-decoration: underline;'>Todolist:</h1>";
         for (Todo todo : todos) {
             site += "<p>" + todo.getContent() + "</p>";
         }
@@ -84,9 +84,9 @@ public class TodoController {
 
     }
 
+    //Näytä todo-lomake
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
-    public String addTodo() {
-        System.out.println("Redirecting back to /todo");
+    public String todoForm() {
         return "todoform";
     }
 }
