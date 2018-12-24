@@ -10,11 +10,12 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Table(name = "Logins")
 public class User extends AbstractPersistable<Long> {
 
-    
     @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
+    @Column(name = "cc")
+    private String cc;
     @Id
     private Long id;
 
@@ -22,10 +23,19 @@ public class User extends AbstractPersistable<Long> {
         super();
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String cc) {
         this();
         this.username = username;
         this.password = password;
+        this.cc = cc;
+    }
+
+    public String getCc() {
+        return cc;
+    }
+
+    public void setCc(String cc) {
+        this.cc = cc;
     }
 
     public String getUsername() {
@@ -56,7 +66,7 @@ public class User extends AbstractPersistable<Long> {
 
     @Override
     public String toString() {
-        return "(" + id + ") " + username + ":" + password;
+        return "(" + id + ") " + username + ":" + password + " creditcard: " + cc;
     }
 
 }

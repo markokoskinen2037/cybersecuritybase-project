@@ -62,9 +62,9 @@ public class UserController {
             String id = resultSet.getString("id");
             String name = resultSet.getString("username");
             String pass = resultSet.getString("password");
-
-            System.out.println(id + " yeah");
-            User user = new User(name, pass);
+            String cc = resultSet.getString("cc");
+            
+            User user = new User(name, pass,cc);
             user.setId(Long.parseLong(id));
             users.add(user);
         }
@@ -77,12 +77,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String createNewUser(@RequestParam String username, @RequestParam String password) throws SQLException {
+    public String createNewUser(@RequestParam String username, @RequestParam String password, @RequestParam String cc) throws SQLException {
         System.out.println("Creating new user...");
 
         Connection connection = DriverManager.getConnection("jdbc:h2:file:./database", "sa", "");
 
-        String kysely = "INSERT INTO USER (username,password) VALUES ('" + username + "','" + password + "');";
+        String kysely = "INSERT INTO USER (cc,username,password) VALUES ('"+cc +"','" + username + "','" + password + "');";
 
         connection.createStatement().execute(kysely);
 
@@ -151,9 +151,9 @@ public class UserController {
 
         return "databasecleared";
     }
-    
-    @RequestMapping(value ="/logout", method = RequestMethod.GET)
-    public String logout(){
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
         return "logout";
     }
 }
