@@ -67,7 +67,7 @@ public class TodoController {
             todos.add(todo);
         }
 
-        String site = "";
+        String site = "<div style='margin:25px;'>";
         site += "<a style='text-decoration: none;color: black;background-color: antiquewhite;border: 1px solid;padding: 5px;border-radius: 2px;' href='/todo'>Go back</a>";
 
         site += " <a style='float:right;text-decoration: none;color: black;background-color: antiquewhite;border: 1px solid;padding: 5px;border-radius: 2px;' href='/leave'>Logout</a>";
@@ -80,6 +80,9 @@ public class TodoController {
         connection.close();
         results.close();
 
+        
+        site+="</div>";
+        
         return site;
 
     }
