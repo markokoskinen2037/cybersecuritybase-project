@@ -80,9 +80,8 @@ public class TodoController {
         connection.close();
         results.close();
 
-        
-        site+="</div>";
-        
+        site += "</div>";
+
         return site;
 
     }
