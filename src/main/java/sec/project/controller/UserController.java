@@ -56,7 +56,7 @@ public class UserController {
         return "register";
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/Users", method = RequestMethod.GET)
     public String listUsers(Model model) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:h2:file:./database", "sa", "");
