@@ -81,7 +81,7 @@ Steps to reproduce:
 7. Refresh the page (press F5).
 8. Notice how there is now a link to "Supersecret adminpage", from where you can now access functions that should be unavailable to everyone except user: "admin". (Don't click the "clear sql database" button just yet!)
 How to fix:
-1. Implement session handling and request validation. This could be achieved with tokens like so:
+1. Implement better session handling and request validation. This could be achieved with tokens like so:
 - User logs in for the first time.
 - Server creates a unique token (for example JWT-token) that is saved on server and also sent back to users web-browser - where the token is stored.
 - Check the token every time, when a user tries to access a restricted URL such as /adminpage.
@@ -102,7 +102,7 @@ Steps to reproduce:
 How to fix:
 Sanitize SQL query input parameters by using Prepared Statements. This can easily be implemented in application code by following these steps:
 1. Create a String query = "INSERT INTO User (username,password,cc) VALUES(?,?);"
-2. Perform some validation on the input parameters. I would suggest at least checking the length of the input parameters, and that if they contain html-elements.
+2. Perform some validation on the input parameters. I would suggest at least checking the length of the input parameters, and that if they contain html-tags.
 3. Create a PreparedStatement object from the query.
 4. Insert input parameters into the PreparedStatement.
 5. Execute the PreparedStatement.
