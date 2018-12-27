@@ -66,11 +66,12 @@ Steps to reproduce:
 How to fix:
 - The todo-listing page is currently being created to a String, by appending todos to the end of it. This String is then returned straight to the browser for rendering.
 - Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing-engine Thymeleaf, that uses th:text as an attribute. By using th:text attribute, Thymeleaf template-engine automatically checks for "shady" input values and acts accordingly. 
-- Now todos that contain <script> tags wont be interpreted as elements that should be rendered, but instead they are treated as text.
+- Now todos that contain <script> tags wont be interpreted as html-elements, but instead they are treated as text.
 -----------------------------------------
 
 Issue: A5 Broken Access Control
 Steps to reproduce:
+1. Go to http://localhost:8080/todo
 1. Click the Logout button.
 2. Go to http://localhost:8080/login
 3. Login with ted:ted
@@ -88,30 +89,30 @@ How to fix:
 - Because the token is created on the server by highly sophisticated Signature Algorithm, it's basically impossible to guess a valid token.
 -----------------------------------------
 
-Issue: Issue: A1 Injection (SQL)
+Issue: A1 Injection (SQL)
 Steps to reproduce:
-1. Open localhost:8080/users
+1. Open localhost:8080/Users
 2. Notice, that the are several users in the database. (If you clicked "CLEAR SQL DATABASE" in the previous part, there wont be any users! If that is the case; create a new user and then continue from step 3)
 3. Open http://localhost:8080/register
-4. Leave name-field empty.
+4. Leave name- and creditcard-fields empty.
 5. Set password-field to: '); DROP TABLE USER; CREATE TABLE User (id int NOT NULL AUTO_INCREMENT,cc varchar(200),username varchar(200),password varchar(200)); INSERT INTO User (cc,username,password) VALUES ('911','You have been hacked',' sorry
 6. Click "Submit".
-7. Open http://localhost:8080/users
+7. Open http://localhost:8080/Users
 8. Notice, that all other users have been deleted.
 How to fix:
 Sanitize SQL query input parameters by using Prepared Statements. This can easily be implemented in application code by following these steps:
 1. Create a String query = "INSERT INTO User (username,password,cc) VALUES(?,?);"
-2. Perform some validation on the input parameters. I would suggest at least checking the length of the input parameters, and that if they contain <script> elements.
+2. Perform some validation on the input parameters. I would suggest at least checking the length of the input parameters, and that if they contain html-elements.
 3. Create a PreparedStatement object from the query.
 4. Insert input parameters into the PreparedStatement.
 5. Execute the PreparedStatement.
 -----------------------------------------
 
-Issue: Issue: A10 Insufficient Logging & Monitoring
+Issue: A10 Insufficient Logging & Monitoring
 Steps to reproduce:
 - Examine the application code and notice that logging & monitoring is not enabled.
 How to fix:
-- Enable logging for the most important methods, such as login-requests with LoggerFactory.
+- Enable logging for the most important features, such as login-requests with LoggerFactory.
 - Configure automatic backups.
 - Implement real-time monitoring alerts.
 -----------------------------------------
