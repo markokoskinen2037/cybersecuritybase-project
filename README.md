@@ -42,7 +42,6 @@ How to fix:
 Steps to reproduce:
 
 First flaw:
-
 1. Open http://localhost:8080/register
 2. Create a new account with any username-password-credit-card combination.
 3. Go to http://localhost:8080/Users
@@ -59,7 +58,6 @@ Third flaw:
 How to fix:
 
 1st flaw:
-
 Enable a password encryption scheme for passwords and credit-card-numbers, for example BCrypt. Once passwords and credit-card-numbers are encrypted, potential breach will be a lot less harmful. The attacker will only be able obtain sensitive information in its encrypted form - making it almost worthless.
 
 2nd flaw:
