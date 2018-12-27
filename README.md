@@ -131,8 +131,8 @@ Sanitize SQL query input parameters by using Prepared Statements. This can easil
 
  ### Issue: A10 Insufficient Logging & Monitoring
 Steps to reproduce:
-
 - Examine the application code and notice that logging & monitoring is not enabled.
+
 How to fix:
 - Enable logging for the most important features, such as login-requests with LoggerFactory.
 - Configure automatic backups.
