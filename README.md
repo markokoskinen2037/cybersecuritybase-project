@@ -20,7 +20,7 @@ Please complete the examination process from top to bottom. Otherwise some of my
 
 Below I will explain how to reproduce the flaws and how to fix them.
 
-Issue: A3 Sensitive Data Exposure
+ ### Issue: A3 Sensitive Data Exposure
 Steps to reproduce:
 1. Run OWASP ZAP.
 2. Create a new "Forced Browse" attack on localhost:8080
@@ -35,11 +35,14 @@ How to fix:
 1. Remove /Users route from the web-application. Because it's insane to provide a route that allows anyone who finds it to obtain a list of sensitive user-data... Maybe it does not matter so much that someone can use their accounts to create some todos, but the users probably use the same username:password combinations on other more important sites. Also, credit card information could be used for fraud.
 2. If /Users route needs to be available, for example to admins - I would recommend implementing token based authentication (JWT token for example) so that only admins are able to access /Users route.
 3. Users credit-card information is stored, but never used, therefore it makes no sense to even ask for it. Remove credit-card-field from registration page.
+
 -----------------------------------------
 
-Issue: A2 Broken Authentication
+ ### Issue: A2 Broken Authentication
 Steps to reproduce:
+
 First flaw:
+
 1. Open http://localhost:8080/register
 2. Create a new account with any username-password-credit-card combination.
 3. Go to http://localhost:8080/Users
@@ -56,6 +59,7 @@ Third flaw:
 How to fix:
 
 1st flaw:
+
 Enable a password encryption scheme for passwords and credit-card-numbers, for example BCrypt. Once passwords and credit-card-numbers are encrypted, potential breach will be a lot less harmful. The attacker will only be able obtain sensitive information in its encrypted form - making it almost worthless.
 
 2nd flaw:
@@ -65,7 +69,7 @@ Change default administrative password to a more secure one. I would advice, tha
 
 -----------------------------------------
 
-Issue: A7 Cross-site Scripting
+ ### Issue: A7 Cross-site Scripting
 Steps to reproduce:
 1. Click the Logout button.
 2. Go to http://localhost:8080/login
@@ -81,7 +85,7 @@ How to fix:
   
 -----------------------------------------
 
-Issue: A5 Broken Access Control
+ ### Issue: A5 Broken Access Control
 Steps to reproduce:
 1. Go to http://localhost:8080/todo
 1. Click the Logout button.
@@ -94,7 +98,8 @@ Steps to reproduce:
 8. Notice how there is now a link to "Supersecret adminpage", from where you can now access functions that should be unavailable to everyone except user: "admin". (Don't click the "clear sql database" button just yet!)
 
 How to fix:
-1. Implement session handling and request validation. This could be achieved with tokens like so:
+
+Implement session handling and request validation. This could be achieved with tokens like so:
 - User logs in for the first time.
 - Server creates a unique token (for example JWT-token) that is saved on server and also sent back to users web-browser - where the token is stored.
 - Check the token every time, when a user tries to access a restricted URL such as /adminpage.
@@ -102,7 +107,7 @@ How to fix:
 - Because the token is created on the server by highly sophisticated Signature Algorithm, it's basically impossible to guess a valid token.
 -----------------------------------------
 
-Issue: A1 Injection (SQL)
+ ### Issue: A1 Injection (SQL)
 Steps to reproduce:
 1. Open localhost:8080/Users
 2. Notice, that the are several users in the database. (If you clicked "CLEAR SQL DATABASE" in the previous part, there wont be any users! If that is the case; create a new user and then continue from step 3)
@@ -124,7 +129,7 @@ Sanitize SQL query input parameters by using Prepared Statements. This can easil
 5. Execute the PreparedStatement.
 -----------------------------------------
 
-Issue: A10 Insufficient Logging & Monitoring
+ ### Issue: A10 Insufficient Logging & Monitoring
 Steps to reproduce:
 
 - Examine the application code and notice that logging & monitoring is not enabled.
