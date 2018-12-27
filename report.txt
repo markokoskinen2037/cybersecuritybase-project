@@ -7,8 +7,8 @@ The project is in GitHub: https://github.com/markokoskinen2037/cybersecuritybase
 
 In order to get started:
 1. Download the project from GitHub.
-2. Open the project in your Java IDE.
-3. Start the project.
+2. Open the project in your Java IDE. 
+3. Run the project.
 
 All application data including (usernames,passwords,credit-card-information,todos) are stored in a local SQL database.
 When you start the application, a new database is created and some sample data is inserted. The following username:password combinations are at your disposal (you can also create new ones):
@@ -20,52 +20,58 @@ Please complete the examination process from top to bottom. Otherwise some of my
 
 Below I will explain how to reproduce the flaws and how to fix them.
 
-A3 Sensitive Data Exposure
+Issue: A3 Sensitive Data Exposure
 Steps to reproduce:
-1. Go to http://localhost:8080/users
-2. Notice how there is no direct link to http://localhost:8080/users in the application. However, if an attacker were to find this URL by accident or with an attacking tool (spider) - he would be able to see usernames, passwords and credit card information of every user... not a desirable situation.
+1. Run OWASP ZAP.
+2. Create a new "Forced Browse" attack on localhost:8080
+3. Select "directory-list-1.0.txt" as the list to be used.
+4. Go to Settings:Forced Browse. 
+5. Disable recursion. Increase maximum threads to 100.
+6. Run the Forced Browse attack.
+7. Look through the list of found routes, and visit localhost:8080/Users
+8. Notice how this hidden endpoint provides sensitive user information.
 How to fix:
-1. Remove /users route from the web-application. Because it's insane to provide a route that allows anyone who finds it to obtain a list of sensitive user-data... Maybe it does not matter so much that someone can use their accounts to create some todos, but the users probably use the same username:password combinations on other more important sites. Also, credit card information could be used for fraud.
-2. If /users route needs to be available, for example to admins - I would recommend implementing token based authentication so that only admins are able to access /users route.
-3. Users credit-card information is stored, but never used, therefore it makes no sense to even ask for them. Remove credit-card-field from registration page.
+1. Remove /Users route from the web-application. Because it's insane to provide a route that allows anyone who finds it to obtain a list of sensitive user-data... Maybe it does not matter so much that someone can use their accounts to create some todos, but the users probably use the same username:password combinations on other more important sites. Also, credit card information could be used for fraud.
+2. If /Users route needs to be available, for example to admins - I would recommend implementing token based authentication (JWT token for example) so that only admins are able to access /Users route.
+3. Users credit-card information is stored, but never used, therefore it makes no sense to even ask for it. Remove credit-card-field from registration page.
 -----------------------------------------
 
-A2 Broken Authentication
-Steps to reproduce
+Issue: A2 Broken Authentication
+Steps to reproduce:
 First flaw:
 1. Open http://localhost:8080/register
 2. Create a new account with any username-password-credit-card combination.
-3. Go to http://localhost:8080/users
+3. Go to http://localhost:8080/Users
 4. Notice that your username, password and credit-card are indeed in plain text.
 Second flaw:
 1. Open http://localhost:8080/login
 2. Login with admin:password
-3. Notice that administrative account's login details are really weak, and therefore easy to crack by brute-force.
+3. Notice that the default administrative account's login details are really weak, and therefore easy to crack by a brute-force attack.
 Third flaw:
-1. Use Owasp ZAP to brute-force your way in.
+1. Run a basic attack on OWASP Zap. Notice how the application allows this obvious attack to continue.
 How to fix:
-1. Enable a password encryption scheme for passwords and credit-card-numbers, for example BCrypt. Once passwords and credit-card-numbers are encrypted, potential breach will be a lot less harmful. The attacker will only be able obtain sensitive information in its encrypted form - making it almost worthless.
-2. Change default administrative password to a more secure one. I would advice, that the administrative password should be around 20 characters long sequence of seemingly random letters - and the password should be changed at least once per month. Also enabling two-factor authentication would make authentication a lot more secure.
-3. Implement server-side functionality that tracks incoming requests. If unusual amount of requests starts pouring in from a single IP address - stop responding to requests coming from that IP to prevent brute-force and credential stuffing attacks.
+1st flaw: Enable a password encryption scheme for passwords and credit-card-numbers, for example BCrypt. Once passwords and credit-card-numbers are encrypted, potential breach will be a lot less harmful. The attacker will only be able obtain sensitive information in its encrypted form - making it almost worthless.
+2nd flaw: Change default administrative password to a more secure one. I would advice, that the administrative password should be around 20 characters long sequence of seemingly random letters - and the password should be changed at least once per month. Also enabling two-factor authentication would make authentication a lot more secure.
+3rd flaw: Implement server-side functionality that tracks incoming requests. If an unusual amount of requests starts pouring in from a single IP address - stop responding to requests coming from that IP for 15 minutes to prevent brute-force and credential stuffing attacks.
 -----------------------------------------
 
-A7 Cross-site Scripting
+Issue: A7 Cross-site Scripting
 Steps to reproduce:
-1. Click the Logout button (top right corner).
+1. Click the Logout button.
 2. Go to http://localhost:8080/login
 3. Login with any account. For example: ted:ted
 4. Add a new todo with Todo-content: <script>window.location.replace("http://www.example.com")</script>
 5. View global list of todos by clicking "Click here"
 6. Notice how you are now being redirected to "http://www.example.com"
 How to fix:
-- The todo-listing page is currently being created to a String, by appending todos to the end of it. This String is then returned straight to the browser to render.
+- The todo-listing page is currently being created to a String, by appending todos to the end of it. This String is then returned straight to the browser for rendering.
 - Instead of creating the list by appending text to a String, iterate over every todo-entity and serve them to a template processing-engine Thymeleaf, that uses th:text as an attribute. By using th:text attribute, Thymeleaf template-engine automatically checks for "shady" input values and acts accordingly. 
 - Now todos that contain <script> tags wont be interpreted as elements that should be rendered, but instead they are treated as text.
 -----------------------------------------
 
-A5 Broken Access Control
+Issue: A5 Broken Access Control
 Steps to reproduce:
-1. Click the Logout button (top right corner).
+1. Click the Logout button.
 2. Go to http://localhost:8080/login
 3. Login with ted:ted
 4. Notice how there is no link to adminpage.
@@ -82,7 +88,7 @@ How to fix:
 - Because the token is created on the server by highly sophisticated Signature Algorithm, it's basically impossible to guess a valid token.
 -----------------------------------------
 
-Issue: A1 Injection (SQL)
+Issue: Issue: A1 Injection (SQL)
 Steps to reproduce:
 1. Open localhost:8080/users
 2. Notice, that the are several users in the database. (If you clicked "CLEAR SQL DATABASE" in the previous part, there wont be any users! If that is the case; create a new user and then continue from step 3)
@@ -101,11 +107,11 @@ Sanitize SQL query input parameters by using Prepared Statements. This can easil
 5. Execute the PreparedStatement.
 -----------------------------------------
 
-Issue: A10 Insufficient Logging & Monitoring
+Issue: Issue: A10 Insufficient Logging & Monitoring
 Steps to reproduce:
 - Examine the application code and notice that logging & monitoring is not enabled.
 How to fix:
-- Enable logging for the most important methods, such as login-requests.
+- Enable logging for the most important methods, such as login-requests with LoggerFactory.
 - Configure automatic backups.
 - Implement real-time monitoring alerts.
 -----------------------------------------
